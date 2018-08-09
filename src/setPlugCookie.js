@@ -1,5 +1,7 @@
 import config from '../js/config'
-import {getConfig} from './api/spider.api'
+import util from './util'
+
+const moli_host = 'http://molitest.willbe.net.cn/editor';
 
 chrome.cookies.set({
     url:'https://we.taobao.com/',
@@ -11,8 +13,8 @@ chrome.cookies.set({
 
 chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
     if (request.cmd== "mycmd"){
-        let apiList = await getConfig();
-        console.log('apiList',apiList,apiList.result,getConfig())
+        let apiList = await util.$http('GET',`${moli_host}/spider/config.wb?version=1.0`);
+        console.log('apiList',apiList,apiList.result)
         //返回到前端
         sendResponse({farewell: "I'm contentscript,goodbye!"});
 
