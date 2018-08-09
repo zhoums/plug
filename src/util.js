@@ -1,0 +1,17 @@
+export default {
+    $http:function(method,uri){
+        return new Promise((resolve,reject) => {
+            var xhr = new XMLHttpRequest();
+            xhr.open(method, uri, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    // JSON解析器不会执行攻击者设计的脚本.
+                    var resp = JSON.parse(xhr.responseText);
+                    resolve(resp);
+                }
+            }
+            xhr.send();
+        })
+
+    }
+}
