@@ -7,6 +7,6 @@ module.exports = webpackMerge(common, {
     // Enable sourcemaps for debugging webpack's output.
     // devtool: "source-map",
 
-    watch: false,
+    watch: true,
 
 })

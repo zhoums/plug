@@ -1,3 +1,4 @@
 // 入口
 
-import './setPlugCookie'
+// import { setCookie,setBegin } from './setPlugCookie'
+require ('./setPlugCookie')
