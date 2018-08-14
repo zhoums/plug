@@ -81,6 +81,7 @@ module.exports = {
             // {output}/to/file.txt
             { from: '../manifest.json', to: '../dist/manifest.json' },
             { from: '../popup.html', to: '../dist/popup.html' },
+            { from: '../background.html', to: '../dist/background.html' },
             { from: '../css', to: '../dist/css' },
             { from: '../images', to: '../dist/images' },
             { from: '../js', to: '../dist/js' },

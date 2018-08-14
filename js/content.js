@@ -16,15 +16,11 @@ function fetchTBdata(urlList){
         console.log('test url',item.apiUrl ,search )
         var time = Math.random()*(90-13+1)+13;
         setTimeout(function () {
-            console.log('===',item)
             $.ajax({
                 url:item.apiUrl+search,
                 type:item.apiMethod||'GET',
                 success:function (data) {
                     var success_flag =item.succFlag.split(":")
-                    console.log('success_flag',success_flag,data);
-                    console.log('llllllll',data[success_flag[0]],success_flag[1])
-                    //todo 这里不是所有都是在content有flag，flag应该固定在根目录
                     if(data[success_flag[0]].toString()==success_flag[1]) {
                         console.log(1,data)
                         var param = {};
@@ -33,9 +29,7 @@ function fetchTBdata(urlList){
                             if(field.dataRoot){
                                 //这里不知有几层，暂时写死五层的情况
                                 var level = field.dataRoot.split(".");
-                                console.log('level',level);
                                 var _feild = field.fields.split("|");
-                                console.log('_feild',_feild)
                                 if (field.dataType === "entity") {
                                     if(level.length==1){
                                         $.each(_feild,function(_id,_it){
@@ -70,22 +64,22 @@ function fetchTBdata(urlList){
                                 }
                             }else{
                                 //console.log('ds',data["content"],field['dataField'],data['content'][field['dataField']])
-                                param[field['dataField']] = data[field['dataField']]//todo content 这里是特例
-                            }
-                            console.log('param',param)
-                        })
-                        // var rq = RemoteCall('post',item.serviceUrl,param);
-                        //  console.log('rq',rq)
-                        console.log('postttttt',JSON.stringify(param));
-                        // return;
-                        $.ajax({
-                            url: item.serviceUrl,
-                            type: 'POST',
-                            data: param,
-                            success: function (res) {
-                                console.log('postres',res);
+                                param[field['dataField']] = data[field['dataField']]
                             }
                         })
+                        console.log('postttttt',Object.assign({},param));
+                        for( let item in param){
+                            console.log(typeof param[item])
+                            if(Array.isArray(param[item])){
+                                param[item] ='['+ param[item]+"]"
+                            }
+                        }
+                        console.log('cccccc',param)
+
+                        chrome.runtime.sendMessage({greeting: "post2moli",url:item.serviceUrl,data:param}, function(response) {
+                            console.log(response);
+                        });
+
                     }
                 }
             })

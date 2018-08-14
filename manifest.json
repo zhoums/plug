@@ -24,7 +24,8 @@
     "https://*/*"
   ],
   "background": {
-    "scripts": ["eventPage.js"]
+    "page": "background.html"
+//    "scripts": ["eventPage.js"]
   },
   "content_scripts": [
     {
