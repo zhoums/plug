@@ -13,9 +13,7 @@ chrome.cookies.set({
 let oi = null;
 util.$http('GET', `${moli_host}/spider/config.wb?version=1.0`)
     .then(function (data) {
-        console.log('data', data)
         oi = data;
-        console.log(oi)
         // sendResponse({dksk:'jfdslafjds'});
     });
 
