@@ -69,13 +69,10 @@ function fetchTBdata(urlList){
                         })
                         console.log('postttttt',Object.assign({},param));
                         for( let item in param){
-                            console.log(typeof param[item])
                             if(Array.isArray(param[item])){
                                 param[item] ='['+ param[item]+"]"
                             }
                         }
-                        console.log('cccccc',param)
-
                         chrome.runtime.sendMessage({greeting: "post2moli",url:item.serviceUrl,data:param}, function(response) {
                             console.log(response);
                         });
