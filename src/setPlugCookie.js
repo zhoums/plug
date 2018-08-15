@@ -1,7 +1,7 @@
 import config from '../js/config'
 import util from './util'
 
-const moli_host = 'http://molitest.willbe.net.cn/spider/spider/config.wb?version=1.0';
+const moli_host = 'http://molitest.willbe.net.cn/spider';
 
 chrome.cookies.set({
     url: 'https://we.taobao.com/',
@@ -11,7 +11,7 @@ chrome.cookies.set({
 })
 
 let oi = null;
-util.$http('GET', `${moli_host}/spider/config.wb?version=1.0`)
+util.$http('GET', `${moli_host}/spider/config.wb?tk=10000&darenId=45522&version=1.0`)
     .then(function (data) {
         oi = data;
         // sendResponse({dksk:'jfdslafjds'});
@@ -19,6 +19,7 @@ util.$http('GET', `${moli_host}/spider/config.wb?version=1.0`)
 
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    console.log('request-request',request)
     if (request.greeting == "oiu") {
         sendResponse(oi);
     }
@@ -26,6 +27,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         $.ajax({
             url: request.url,
             type: 'POST',
+            headers: request.header,
             data: request.data,
             success: function (res) {
                 console.log('postres', res);
@@ -59,4 +61,3 @@ let setBegin = function setBegin() {
         }
     });
 }
-export {setCookie, setBegin}
