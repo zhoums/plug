@@ -58,9 +58,14 @@ function fetchTBdata(urlList,headObj){
                     })
                 }
             }
+            if(item.contentType){
+                _headObj["Content-Type"]=item.contentType;
+            }
             //head参数在这里设置
-            postMoliHeadParam.push(_headObj)
+            postMoliHeadParam.push(_headObj);
+
         })
+        console.log('contentTypeVal-postMoliHeadParam',postMoliHeadParam)
         argumentList.forEach((argument,index)=>{
             var search="?";
             for(var key in argument){
@@ -116,49 +121,70 @@ function fetchTBdata(urlList,headObj){
                                             })
                                         }
                                     } else if (field.dataType === "list") {
-                                        console.log('dataaaaaa',data)
+                                        console.log('dataaaaaa',field,data,_feild)
+                                        param[field['backArg']]=[];
                                         //todo
                                         if(level.length==1){
-                                            $.each(_feild,function(_id,_it){
-                                                var _param = _it.split(":");
-                                                param[_param[1]] = data[level[0]][_param[0]]
+                                            data[level[0]].forEach((item,index)=>{
+                                                let objItem = {}
+                                                $.each(_feild,function(_id,_it){
+                                                    var _param = _it.split(":");
+                                                    objItem[_param[1]] = item[''+_param[0]];//字段名有中文
+                                                })
+                                                param[field['backArg']].push(objItem);
                                             })
+
                                         }else if(level.length==2){
-                                            $.each(_feild,function(_id,_it){
-                                                var _param = _it.split(":");
-                                                param[_param[1]] = data[level[0]][level[1]][_param[0]]
+                                            data[level[0]][level[1]].forEach((item,index)=>{
+                                                let objItem = {}
+                                                $.each(_feild,function(_id,_it){
+                                                    var _param = _it.split(":");
+                                                    objItem[_param[1]] = item[''+_param[0]];//字段名有中文
+                                                })
+                                                param[field['backArg']].push(objItem);
                                             })
                                         }else if(level.length==3){
-                                            $.each(_feild,function(_id,_it){
-                                                var _param = _it.split(":");
-                                                param[_param[1]] = data[level[0]][level[1]][level[2]][_param[0]]
+                                            data[level[0]][level[1]][level[2]].forEach((item,index)=>{
+                                                let objItem = {}
+                                                $.each(_feild,function(_id,_it){
+                                                    var _param = _it.split(":");
+                                                    objItem[_param[1]] = item[''+_param[0]];//字段名有中文
+                                                })
+                                                param[field['backArg']].push(objItem);
                                             })
                                         }else if(level.length==4){
-                                            $.each(_feild,function(_id,_it){
-                                                var _param = _it.split(":");
-                                                param[_param[1]] = data[level[0]][level[1]][level[2]][level[3]][_param[0]]
+                                            data[level[0]][level[1]][level[2]][level[3]].forEach((item,index)=>{
+                                                let objItem = {}
+                                                $.each(_feild,function(_id,_it){
+                                                    var _param = _it.split(":");
+                                                    objItem[_param[1]] = item[''+_param[0]];//字段名有中文
+                                                })
+                                                param[field['backArg']].push(objItem);
                                             })
                                         }else if(level.length==5){
-                                            $.each(_feild,function(_id,_it){
-                                                var _param = _it.split(":");
-                                                param[_param[1]] = data[level[0]][level[1]][level[2]][level[3]][level[4]][_param[0]]
+                                            data[level[0]][level[1]][level[2]][level[3]][level[4]].forEach((item,index)=>{
+                                                let objItem = {}
+                                                $.each(_feild,function(_id,_it){
+                                                    var _param = _it.split(":");
+                                                    objItem[_param[1]] = item[''+_param[0]];//字段名有中文
+                                                })
+                                                param[field['backArg']].push(objItem);
                                             })
                                         }
                                     } else {
+                                        console.log('dataField',field.dataFieldta)
                                         param[field['dataField']] = data[field['dataField']]
                                     }
                                 }else{
+                                    console.log('dataField',field['dataField'],field.dataFieldta)
                                     param[field['dataField']] = data[field['dataField']]
                                 }
-                                if(item.apiUrl=="https://we.taobao.com/index/data.json")
-                                    console.log('param柔柔弱弱',param)
                             })
                             for( let item in param){
                                 if(Array.isArray(param[item])){
                                     param[item] ='['+ param[item]+"]"
                                 }
                             }
-                            console.log('hhhhhhhhhh',param)
                             chrome.runtime.sendMessage({greeting: "post2moli",url:item.serviceUrl,data:param,header:postMoliHeadParam[index]}, function(response) {
                                 console.log(response);
                             });
