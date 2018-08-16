@@ -20,6 +20,7 @@ $(function(){
     $("#smartSet").on("click",function(){
         let darenId = $(this).attr("data-darenId"),
             tk = $(this).attr("data-token");
+        let headObj={darenId:darenId,tk:tk}
         chrome.runtime.sendMessage({greeting: "oiu"}, function(response) {
             fetchTBdata(response.result,headObj);
         });
@@ -79,7 +80,7 @@ function fetchTBdata(urlList,headObj){
                 type:item.apiMethod||'GET',
                 success:function (data) {
                     var success_flag =item.succFlag.split(":")
-                    if(data[success_flag[0]].toString()==success_flag[1]) {
+                    if(data[success_flag[0]].toString()==$.trim(success_flag[1])) {
                         var param = {};
                         //解析出每一个要传递到后台的参数
                         $.each(item.fields, function (_index, field) {
@@ -184,12 +185,6 @@ function fetchTBdata(urlList,headObj){
                                 param[field['dataField']] = data[field['dataField']]
                             }
                         })
-                        /*for( let item in param){
-                            if(Array.isArray(param[item])){
-                                param[item] ='['+ param[item]+"]"
-                            }
-                        }*/
-
                         chrome.runtime.sendMessage({greeting: "post2moli",url:item.serviceUrl,data:param,header:postMoliHeadParam[index]}, function(response) {
                             // console.log(response);
                         });
