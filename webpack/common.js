@@ -1,6 +1,7 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const { resolve } = require('path')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 // the path(s) that should be cleaned
 let pathsToClean = [
@@ -76,7 +77,6 @@ module.exports = {
 
     plugins: [
         new CleanWebpackPlugin(pathsToClean, cleanOptions),
-
         new CopyWebpackPlugin([
             // {output}/to/file.txt
             { from: '../manifest.json', to: '../dist/manifest.json' },
@@ -86,6 +86,7 @@ module.exports = {
             { from: '../images', to: '../dist/images' },
             { from: '../js', to: '../dist/js' },
         ]),
+        new UglifyJSPlugin(),
     ]
 
 }

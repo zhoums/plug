@@ -1,38 +1,34 @@
 
 $(function(){
-    function get_cookie(Name) {
-        var search = Name + "="//查询检索的值
-        var returnvalue = "";//返回值
-        if (document.cookie.length > 0) {
-            sd = document.cookie.indexOf(search);
-            if (sd!= -1) {
-                sd += search.length;
-                end = document.cookie.indexOf(";", sd);
-                if (end == -1)
-                    end = document.cookie.length;
-                //unescape() 函数可对通过 escape() 编码的字符串进行解码。
-                returnvalue=unescape(document.cookie.substring(sd, end))
-            }
-        }
-        return returnvalue;
-    }
-    const headObj = {tk:'100000',darenId:10000};
+
+    // const headObj = {tk:'100000',darenId:10000};
+    //
+    let darenId = $(this).attr("data-darenId")||10000,
+        darenName = $(this).attr("data-darenName")|10000,
+        tk = $(this).attr("data-token")||10000;
+
+    chrome.runtime.sendMessage({greeting: "triggerConfig",head:"tk="+tk+"&darenId="+darenId+"&darenName="+darenName}, function(response) {
+
+    });
+
+
     $("#smartSet").on("click",function(){
         let darenId = $(this).attr("data-darenId"),
             tk = $(this).attr("data-token");
-        let headObj={darenId:darenId,tk:tk}
-        chrome.runtime.sendMessage({greeting: "oiu"}, function(response) {
+        let headObj={darenId:darenId,tk:tk,darenName:darenName}
+        chrome.runtime.sendMessage({greeting: "fetchConfig"}, function(response) {
             fetchTBdata(response.result,headObj);
         });
     })
 
-    if(get_cookie('check-plug-cookie')){
+    /*if(get_cookie('check-plug-cookie')){
+        console.log('lllllll')
         setTimeout(function(){
-            chrome.runtime.sendMessage({greeting: "oiu"}, function(response) {
+            chrome.runtime.sendMessage({greeting: "fetchConfig"}, function(response) {
                 fetchTBdata(response.result,headObj);
             });
         },3000)
-    }
+    }*/
 })
 
 function fetchTBdata(urlList,headObj){
@@ -200,4 +196,22 @@ function fetchTBdata(urlList,headObj){
             },time*100)
         })
     })
+}
+
+
+function get_cookie(Name) {
+    var search = Name + "="//查询检索的值
+    var returnvalue = "";//返回值
+    if (document.cookie.length > 0) {
+        sd = document.cookie.indexOf(search);
+        if (sd!= -1) {
+            sd += search.length;
+            end = document.cookie.indexOf(";", sd);
+            if (end == -1)
+                end = document.cookie.length;
+            //unescape() 函数可对通过 escape() 编码的字符串进行解码。
+            returnvalue=unescape(document.cookie.substring(sd, end))
+        }
+    }
+    return returnvalue;
 }
