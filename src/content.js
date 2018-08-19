@@ -1,11 +1,12 @@
 
 $(function(){
 
-    // const headObj = {tk:'100000',darenId:10000};
     //
     let darenId = $(this).attr("data-darenId")||10000,
         darenName = $(this).attr("data-darenName")|10000,
         tk = $(this).attr("data-token")||10000;
+
+    let headObj={darenId:darenId,tk:tk,darenName:darenName}
 
     chrome.runtime.sendMessage({greeting: "triggerConfig",head:"tk="+tk+"&darenId="+darenId+"&darenName="+darenName}, function(response) {
 
@@ -13,22 +14,36 @@ $(function(){
 
 
     $("#smartSet").on("click",function(){
-        let darenId = $(this).attr("data-darenId"),
-            tk = $(this).attr("data-token");
-        let headObj={darenId:darenId,tk:tk,darenName:darenName}
+        $.ajax({
+            url:'https://sycm.taobao.com/custom/menu/getPersonalView.json',
+            success:function(res){
+                console.log(res);
+            }
+        })
         chrome.runtime.sendMessage({greeting: "fetchConfig"}, function(response) {
             fetchTBdata(response.result,headObj);
         });
     })
 
-    /*if(get_cookie('check-plug-cookie')){
-        console.log('lllllll')
-        setTimeout(function(){
-            chrome.runtime.sendMessage({greeting: "fetchConfig"}, function(response) {
-                fetchTBdata(response.result,headObj);
-            });
-        },3000)
-    }*/
+    if(get_cookie('check-plug-cookie')){
+        $.ajax({
+            url:'https://sycm.taobao.com/custom/menu/getPersonalView.json',
+            success:function(res){
+                if(res.code == 0|| (res.data.hasOwnProperty("loginUserId")&&res.data.loginUserId)){
+                    $("#step-login").addClass("s-step-ed");
+                    $("#s-step-tip").html("正在智能回填数据，预计需要6分钟，期间请勿关闭界面。。。");
+                    chrome.runtime.sendMessage({greeting: "fetchConfig"}, function(response) {
+                        fetchTBdata(response.result,headObj);
+                    });
+                }else{
+                    $("#s-step-tip").html("请登录淘宝进行数据授权，<a href='https://we.taobao.com/' target='_blank'>数据授权</a>");
+                    //登录后如何知道完成操作？
+                }
+            }
+        })
+        return;
+
+    }
 })
 
 function fetchTBdata(urlList,headObj){
@@ -203,10 +218,10 @@ function get_cookie(Name) {
     var search = Name + "="//查询检索的值
     var returnvalue = "";//返回值
     if (document.cookie.length > 0) {
-        sd = document.cookie.indexOf(search);
+        let sd = document.cookie.indexOf(search);
         if (sd!= -1) {
             sd += search.length;
-            end = document.cookie.indexOf(";", sd);
+            let end = document.cookie.indexOf(";", sd);
             if (end == -1)
                 end = document.cookie.length;
             //unescape() 函数可对通过 escape() 编码的字符串进行解码。

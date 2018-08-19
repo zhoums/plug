@@ -1,10 +1,22 @@
-import config from '../js/config'
+import config from './config'
 import util from './util'
 
-const moli_host = config.backEndHost;
+
+let frontEndHost = "";
+let moli_host = "";
+
+if(process.env.NODE_ENV == "local"){
+    moli_host = config.backEndHost_dev
+    // frontEndHost = config.frontEndHost_dev
+    frontEndHost = config.tbPlatform;
+}else if(process.env.NODE_ENV == "production"){
+    moli_host = config.backEndHost_pro
+    // frontEndHost = config.frontEndHost_pro
+    frontEndHost = config.tbPlatform
+}
 
 chrome.cookies.set({
-    url: config.platform,
+    url: frontEndHost,
     name: config.checkPlugCookie,
     value: "check-plug-cookie-val",
 }, function () {

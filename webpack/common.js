@@ -24,6 +24,8 @@ module.exports = {
 
     entry: {
         eventPage: "./eventPage.js",
+        config: "./config.js",
+        content: "./content.js"
     },
 
     output: {
